@@ -29,8 +29,8 @@ exports.new = function (req, res) {
     service.is_deleted = req.body.is_deleted ? req.body.is_deleted : 0;
 // save the service and check for errors
     service.save(function (err) {
-        // if (err)
-        //     res.json(err);
+        if (err)
+            res.json(err);
         res.json({
             message: 'New service created!',
             data: req.body

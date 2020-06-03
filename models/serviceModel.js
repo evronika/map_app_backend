@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 // Setup schema
 var serviceSchema = mongoose.Schema({
     _id: {
-        type: Number
+        type: String
     },
     name: {
         type: String,

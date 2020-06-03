@@ -4,12 +4,14 @@ let serviceRouter = require('./routes/service');
 // Init routes
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('error', { title: 'Express :) Hurray!..', name: "Index" });
-});
+
+router.get('/', function(req,res){
+    let json_data = {'name':'amita','pass':'12345'};
+    res.json(json_data);
+})
 
 // Import service controller
-var serviceController = require('./controllers/serviceController');
+let serviceController = require('./controllers/serviceController');
 // Service routes
 router.route('/services')
     .get(serviceController.index)
