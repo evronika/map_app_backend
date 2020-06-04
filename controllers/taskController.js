@@ -6,6 +6,7 @@ const v4 = require('uuid/v4')
 exports.index = async function (req, res) {
   try {
     const tasks = await Task.find({ is_deleted: 0 })
+
     res.json({
       success: true,
       message: 'Tasks retrieved successfully',
@@ -19,7 +20,6 @@ exports.index = async function (req, res) {
   }
 }
 
-// Handle create task actions
 exports.new = async function (req, res) {
   if (!req.body.description) {
     res.json({ success: false, message: 'Description is not specified. Please change the data.' })
@@ -35,12 +35,12 @@ exports.new = async function (req, res) {
     service_id: req.body.service_id
   }
   try {
-    await Task.create(object, () => {
-      res.json({
-        success: true,
-        message: 'New task is created!',
-        data: object
-      })
+    await Task.create(object)
+
+    res.json({
+      success: true,
+      message: 'New task is created!',
+      data: object
     })
   } catch (error) {
     res.json({ success: false, message: error })
@@ -51,6 +51,7 @@ exports.new = async function (req, res) {
 exports.view = async function (req, res) {
   try {
     const task = await Task.findById(req.params.task_id)
+
     res.json({
       success: true,
       message: 'Task details are loaded.',
@@ -70,8 +71,8 @@ exports.update = async function (req, res) {
     task.location = req.body.location ? req.body.location : task.location
     task.date_updated = new Date()
     task.description = req.body.description ? req.body.description : task.description
-
     task.save()
+
     res.json({
       success: true,
       message: 'Task Info updated',
@@ -88,6 +89,7 @@ exports.delete = async function (req, res) {
     const task = await Task.findById(req.params.task_id)
     task.is_deleted = 1
     task.save()
+
     res.json({
       success: true,
       message: 'Task is deleted',
@@ -96,22 +98,12 @@ exports.delete = async function (req, res) {
   } catch (error) {
     res.json({ success: false, message: error })
   }
-
-  // for now, I will comment it out, because it is a hard remove. We need just to set id_deleted = 1
-  // Task.remove({
-  //   _id: req.params.task_id
-  // }, function (err, task) {
-  //   if (err) { res.send(err) }
-  //   res.json({
-  //     status: 'success',
-  //     message: 'Task deleted'
-  //   })
-  // })
 }
 
 exports.getTrash = async function (req, res) {
   try {
     const tasks = await Task.find({ is_deleted: 1 })
+
     res.json({
       status: 'success',
       message: 'Trash is retrieved successfully',
@@ -125,6 +117,7 @@ exports.getTrash = async function (req, res) {
 exports.cleanTrash = async function (req, res) {
   try {
     const tasks = await Task.deleteMany({ is_deleted: 1 })
+
     res.json({
       status: 'success',
       message: 'Trash is cleared successfully',

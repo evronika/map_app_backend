@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 
-// Setup schema
 var taskSchema = mongoose.Schema({
   _id: {
     type: String
@@ -30,7 +29,7 @@ var taskSchema = mongoose.Schema({
   }
 })
 
-// Export Contact model
+// Export model
 var Task = module.exports = mongoose.model('tasks', taskSchema)
 module.exports.get = function (callback, limit) {
   Task.find(callback).limit(limit)
