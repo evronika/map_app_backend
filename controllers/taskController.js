@@ -1,85 +1,136 @@
 // Import task model
-Task = require('../models/taskModel');
-const v4 = require('uuid/v4');
-const JSON = require('circular-json');
+const Task = require('../models/taskModel')
+const v4 = require('uuid/v4')
 
 // Handle index actions
-exports.index = function (req, res) {
-    Task.get(function (err, tasks) {
-        if (err) {
-            res.json({
-                status: "error",
-                message: err,
-            });
-        }
-        res.json({
-            status: "success",
-            message: "Tasks retrieved successfully",
-            data: tasks
-        });
-    });
-};
+exports.index = async function (req, res) {
+  try {
+    const tasks = await Task.find({ is_deleted: 0 })
+    res.json({
+      success: true,
+      message: 'Tasks retrieved successfully',
+      data: tasks
+    })
+  } catch (err) {
+    res.json({
+      status: 'error',
+      message: err
+    })
+  }
+}
 
 // Handle create task actions
-exports.new = function (req, res) {
-    var task = new Task();
-    task._id = v4();
-    task.name = req.body.name ? req.body.name : 'Unknown';
-    task.image = req.body.image;
-    task.is_deleted = req.body.is_deleted ? req.body.is_deleted : 0;
-// save the task and check for errors
-    task.save(function (err) {
-        // if (err)
-        //     res.json(err);
-        res.json({
-            message: 'New task created!',
-            data: req.body
-        });
-    });
-};
+exports.new = async function (req, res) {
+  if (!req.body.description) {
+    res.json({ success: false, message: 'Description is not specified. Please change the data.' })
+  } else if (!req.body.service_id) {
+    res.json({ success: false, message: '500 Error. Service id is not specified.' })
+  }
+  const object = {
+    _id: v4(),
+    description: req.body.description ? req.body.description : 'Unknown',
+    image: req.body.image ? req.body.image : '',
+    date_created: new Date(),
+    is_deleted: req.body.is_deleted ? req.body.is_deleted : 0,
+    service_id: req.body.service_id
+  }
+  try {
+    await Task.create(object, () => {
+      res.json({
+        success: true,
+        message: 'New task is created!',
+        data: object
+      })
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+}
 
 // Handle view task info
-exports.view = function (req, res) {
-    Task.findById(req.params.task_id, function (err, task) {
-        if (err)
-            res.send(err);
-        res.json({
-            message: 'Task details loading..',
-            data: task
-        });
-    });
-};
+exports.view = async function (req, res) {
+  try {
+    const task = await Task.findById(req.params.task_id)
+    res.json({
+      success: true,
+      message: 'Task details are loaded.',
+      data: task
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+}
 
 // Handle update task info
-exports.update = function (req, res) {
-    Task.findById(req.params.task_id, function (err, task) {
-        if (err)
-            res.send(err);
-        task.name = req.body.name ? req.body.name : 'Unknown';
-        task.image = req.body.image;
-        task.is_deleted = req.body.is_deleted ? req.body.is_deleted : 0;
-// save the task and check for errors
-        task.save(function (err) {
-            if (err)
-                res.json(err);
-            res.json({
-                message: 'Task Info updated',
-                data: task
-            });
-        });
-    });
-};
+exports.update = async function (req, res) {
+  try {
+    const task = await Task.findById(req.params.task_id)
+    task.service_id = req.body.service_id
+    task.service_option_id = req.body.service_option_id ? req.body.service_option_id : task.service_option_id
+    task.location = req.body.location ? req.body.location : task.location
+    task.date_updated = new Date()
+    task.description = req.body.description ? req.body.description : task.description
+
+    task.save()
+    res.json({
+      success: true,
+      message: 'Task Info updated',
+      data: task
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+}
 
 // Handle delete task
-exports.delete = function (req, res) {
-    Task.remove({
-        _id: req.params.task_id
-    }, function (err, task) {
-        if (err)
-            res.send(err);
-        res.json({
-            status: "success",
-            message: 'Task deleted'
-        });
-    });
-};
+exports.delete = async function (req, res) {
+  try {
+    const task = await Task.findById(req.params.task_id)
+    task.is_deleted = 1
+    task.save()
+    res.json({
+      success: true,
+      message: 'Task is deleted',
+      id: task._id
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+
+  // for now, I will comment it out, because it is a hard remove. We need just to set id_deleted = 1
+  // Task.remove({
+  //   _id: req.params.task_id
+  // }, function (err, task) {
+  //   if (err) { res.send(err) }
+  //   res.json({
+  //     status: 'success',
+  //     message: 'Task deleted'
+  //   })
+  // })
+}
+
+exports.getTrash = async function (req, res) {
+  try {
+    const tasks = await Task.find({ is_deleted: 1 })
+    res.json({
+      status: 'success',
+      message: 'Trash is retrieved successfully',
+      data: tasks
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+}
+
+exports.cleanTrash = async function (req, res) {
+  try {
+    const tasks = await Task.deleteMany({ is_deleted: 1 })
+    res.json({
+      status: 'success',
+      message: 'Trash is cleared successfully',
+      data: tasks
+    })
+  } catch (error) {
+    res.json({ success: false, message: error })
+  }
+}

@@ -1,24 +1,28 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 // Setup schema
 var serviceSchema = mongoose.Schema({
-    _id: {
-        type: String
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    image: {
-        type: String,
-        required: true
-    },
-    is_deleted: Number
-});
-
+  _id: {
+    type: String
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  date_created: Date,
+  date_updated: Date,
+  is_deleted: {
+    type: Number,
+    default: 0
+  }
+})
 
 // Export Contact model
-var Service = module.exports = mongoose.model('services', serviceSchema);
+var Service = module.exports = mongoose.model('services', serviceSchema)
 module.exports.get = function (callback, limit) {
-    Service.find(callback).limit(limit);
+  Service.find(callback).limit(limit)
 }

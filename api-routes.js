@@ -1,38 +1,41 @@
 // Initialize express router
-let router = require('express').Router();
-let serviceRouter = require('./routes/service');
-// Init routes
+const router = require('express').Router()
 
 /* GET home page. */
 
-router.get('/', function(req,res){
-    let json_data = {'name':'amita','pass':'12345'};
-    res.json(json_data);
+router.get('/', function (req, res) {
+  const jsonData = { data: 'Main Page' }
+  res.json(jsonData)
 })
 
 // Import service controller
-let serviceController = require('./controllers/serviceController');
+const serviceController = require('./controllers/serviceController')
 // Service routes
+router.route('/services/trash')
+  .get(serviceController.getTrash)
+  .delete(serviceController.cleanTrash)
 router.route('/services')
-    .get(serviceController.index)
-    .post(serviceController.new);
+  .get(serviceController.index)
+  .post(serviceController.new)
 router.route('/services/:service_id')
-    .get(serviceController.view)
-    .patch(serviceController.update)
-    .put(serviceController.update)
-    .delete(serviceController.delete);
-;
+  .get(serviceController.view)
+  .patch(serviceController.update)
+  .put(serviceController.update)
+  .delete(serviceController.delete)
 
-var taskController = require('./controllers/taskController');
-// Service routes
+var taskController = require('./controllers/taskController')
+// Task routes
+router.route('/tasks/trash')
+  .get(taskController.getTrash)
+  .delete(taskController.cleanTrash)
 router.route('/tasks')
-    .get(taskController.index)
-    .post(taskController.new);
+  .get(taskController.index)
+  .post(taskController.new)
 router.route('/tasks/:task_id')
-    .get(taskController.view)
-    .patch(taskController.update)
-    .put(taskController.update)
-    .delete(taskController.delete);
-;
+  .get(taskController.view)
+  .patch(taskController.update)
+  .put(taskController.update)
+  .delete(taskController.delete)
+
 // Export API routes
-module.exports = router;
+module.exports = router
