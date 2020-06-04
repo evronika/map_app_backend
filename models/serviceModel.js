@@ -11,7 +11,7 @@ var serviceSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    required: true
+    required: false
   },
   date_created: Date,
   date_updated: Date,
