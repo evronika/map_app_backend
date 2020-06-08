@@ -68,6 +68,26 @@ exports.view = async function (req, res) {
   }
 }
 
+exports.getByServiceId = async function (req, res) {
+  try {
+    const tasks = await Task.find({
+      is_deleted: 0,
+      service_id: req.params.service_id
+    })
+
+    res.status(200).json({
+      success: true,
+      message: 'Tasks retrieved successfully',
+      data: tasks
+    })
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error
+    })
+  }
+}
+
 // Handle update task info
 exports.update = async function (req, res) {
   try {

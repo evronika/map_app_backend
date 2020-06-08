@@ -36,6 +36,8 @@ router.route('/tasks/:task_id')
   .patch(taskController.update)
   .put(taskController.update)
   .delete(taskController.delete)
+router.route('/tasks/service_id/:service_id')
+  .get(taskController.getByServiceId)
 
 // Export API routes
 module.exports = router
