@@ -6,9 +6,10 @@ const db = require('./utils/db')
 // Init app
 var app = express()
 
-// view engine setup
-// app.set('src', path.join(__dirname, 'src'));
-// app.set('src engine', 'pug');
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
