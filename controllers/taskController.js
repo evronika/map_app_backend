@@ -7,15 +7,15 @@ exports.index = async function (req, res) {
   try {
     const tasks = await Task.find({ is_deleted: 0 })
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'Tasks retrieved successfully',
       data: tasks
     })
-  } catch (err) {
-    res.json({
-      status: 'error',
-      message: err
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error
     })
   }
 }
@@ -37,13 +37,16 @@ exports.new = async function (req, res) {
   try {
     await Task.create(object)
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'New task is created!',
       data: object
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
 
@@ -52,13 +55,16 @@ exports.view = async function (req, res) {
   try {
     const task = await Task.findById(req.params.task_id)
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'Task details are loaded.',
       data: task
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
 
@@ -73,13 +79,16 @@ exports.update = async function (req, res) {
     task.description = req.body.description ? req.body.description : task.description
     task.save()
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'Task Info updated',
       data: task
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
 
@@ -90,13 +99,16 @@ exports.delete = async function (req, res) {
     task.is_deleted = 1
     task.save()
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'Task is deleted',
       id: task._id
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
 
@@ -104,13 +116,16 @@ exports.getTrash = async function (req, res) {
   try {
     const tasks = await Task.find({ is_deleted: 1 })
 
-    res.json({
-      status: 'success',
+    res.status(200).json({
+      success: true,
       message: 'Trash is retrieved successfully',
       data: tasks
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
 
@@ -118,12 +133,15 @@ exports.cleanTrash = async function (req, res) {
   try {
     const tasks = await Task.deleteMany({ is_deleted: 1 })
 
-    res.json({
-      status: 'success',
+    res.status(200).json({
+      success: true,
       message: 'Trash is cleared successfully',
       data: tasks
     })
   } catch (error) {
-    res.json({ success: false, message: error })
+    res.status(400).json({
+      success: false,
+      message: error
+    })
   }
 }
