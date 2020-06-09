@@ -15,7 +15,7 @@ var taskSchema = mongoose.Schema({
   description: {
     type: String,
     index: true,
-    unique: true
+    unique: false
   },
   date_created: Date,
   date_updated: Date,
