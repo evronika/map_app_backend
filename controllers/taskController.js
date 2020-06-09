@@ -22,9 +22,11 @@ exports.index = async function (req, res) {
 
 exports.new = async function (req, res) {
   if (!req.body.description) {
-    res.json({ success: false, message: 'Description is not specified. Please change the data.' })
+    res.status(400).json({ success: false, message: 'Description is not specified. Please change the data.' })
+  } else if (!req.body.location) {
+    res.status(400).json({ success: false, message: 'Location is not specified. Please change the data.' })
   } else if (!req.body.service_id) {
-    res.json({ success: false, message: '500 Error. Service id is not specified.' })
+    res.status(400).json({ success: false, message: '500 Error. Service id is not specified.' })
   }
   const object = {
     _id: v4(),
