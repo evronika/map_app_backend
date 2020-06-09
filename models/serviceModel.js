@@ -9,10 +9,6 @@ var serviceSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  image: {
-    type: String,
-    required: false
-  },
   date_created: Date,
   date_updated: Date,
   is_deleted: {

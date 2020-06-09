@@ -14,7 +14,7 @@ var taskSchema = mongoose.Schema({
   },
   location: {
     type: String,
-    required: false
+    required: true
   },
   description: {
     type: String,
