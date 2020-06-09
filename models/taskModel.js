@@ -8,10 +8,6 @@ var taskSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  service_option_id: {
-    type: String,
-    required: false
-  },
   location: {
     type: String,
     required: true

@@ -29,7 +29,7 @@ exports.new = async function (req, res) {
   const object = {
     _id: v4(),
     description: req.body.description ? req.body.description : 'Unknown',
-    image: req.body.image ? req.body.image : '',
+    location: req.body.location,
     date_created: new Date(),
     is_deleted: req.body.is_deleted ? req.body.is_deleted : 0,
     service_id: req.body.service_id
