@@ -8,14 +8,16 @@ var taskSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  service_name: {
+    type: String,
+    required: true
+  },
   location: {
     type: String,
     required: true
   },
   description: {
-    type: String,
-    index: true,
-    unique: false
+    type: String
   },
   date_created: Date,
   date_updated: Date,
