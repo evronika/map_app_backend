@@ -98,10 +98,11 @@ exports.update = async function (req, res) {
   try {
     const task = await Task.findById(req.params.task_id)
     task.service_id = req.body.service_id
-    task.service_name = req.service_name
+    task.service_name = req.body.service_name
     task.location = req.body.location ? req.body.location : task.location
     task.date_updated = new Date()
     task.description = req.body.description ? req.body.description : task.description
+    console.log('updated task', task)
     task.save()
 
     res.json({
