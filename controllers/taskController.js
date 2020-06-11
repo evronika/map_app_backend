@@ -102,7 +102,6 @@ exports.update = async function (req, res) {
     task.location = req.body.location ? req.body.location : task.location
     task.date_updated = new Date()
     task.description = req.body.description ? req.body.description : task.description
-    console.log('updated task', task)
     task.save()
 
     res.json({
